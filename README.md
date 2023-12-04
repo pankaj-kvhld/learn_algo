@@ -111,3 +111,74 @@ The time complexity of `can_sum` is $O(n^m)$ where `n` is the target and
 ```
 
 ### Recursion with memoization
+
+## 3 Can construct
+
+\<!– Write a function “canConstruct(target, wordBank) that accepts
+target string and an array of strings. The function should return a
+boolean indicating whether or not the”target\* can be constructed by
+concatenating elements of the wordBank array.
+
+Write a function `canConstruct(target, wordBank)` that accepts target
+string and an array of strings. The function should return a boolean
+indicating whether or not the `target` can be constructed by
+concatenating elements of the wordBank array. You may reuse elements of
+wordBank as many times as needed.
+
+``` python
+def can_construct(target, words):
+    if target=='': return True
+    for word in words:
+        if target.startswith(word):
+            return can_construct(target[len(word):], words)
+    return False
+```
+
+``` python
+can_construct('abcd', ['ab', 'bc', 'cd'])
+```
+
+    True
+
+``` python
+can_construct("", ["f"])
+```
+
+    True
+
+``` python
+can_construct('ffffffffffffffffffffffd', ['f','fff','fffff', 'd'])
+```
+
+    True
+
+## Count construct
+
+Write a function `countConstruct(target, wordBank)` that accepts a
+target string and an array of strings. The function should return the
+number of ways that the target can be constructed by concatenating
+elements of the wordBank array.
+
+You may reuse elements of wordBank as many times as needed.
+
+``` python
+def count_construct(target, words):
+    if target=='': return 1
+    res=0
+    for word in words:
+        if target.startswith(word):
+            res += count_construct(target[len(word):], words)
+    return res
+```
+
+``` python
+count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'])
+```
+
+    3
+
+``` python
+count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])
+```
+
+    2
