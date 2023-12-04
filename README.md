@@ -5,8 +5,109 @@
 This will serve as a quick revision and repo of all algorithms which I
 intend to master.
 
-## Install
+## 1. Exponent
 
-``` sh
-pip install learn_algo
+Write a program to implement $n^k$.
+
+### Iterative approach
+
+First is a simple iterative approach.
+
+``` python
+def pow(n,k):
+    res=1
+    for _ in range(k):
+        res*=n
+    return res
 ```
+
+``` python
+assert pow(2,5)==32
+```
+
+### Recursive approach
+
+The key is to realize that $n^k$ can be expressed as sequence of
+squaring operations. For ex:
+
+We divide the exponent ($k$) by $2$, if we get an even number we divide
+by $2$ again, if we get an odd number we multiply by the number and
+continue the process with $k-1$.
+
+``` python
+def pow(n,k):
+    if k==1: return n
+    return pow(n,k//2) * pow(n, k//2) if k%2==0 else n * pow(n, k-1)
+```
+
+``` python
+assert pow(2,5)==2**5
+assert pow(3,5)==3**5
+```
+
+### Recursive implemented using a stack
+
+Any recursive function can be represented as an iterative one with a
+stack data structure. Which is what is happening in the recursive one.
+
+``` python
+def pow(n,k):
+    op_stack=[]
+    res=n
+    # Create the stack
+    while k>1:
+        if k%2==0:
+            op_stack.append('square')
+            k=k//2
+        else:
+            op_stack.append('multiply')
+            k-=1
+    # Unravel the stack
+    while op_stack:
+        op=op_stack.pop()
+        if op=='square':
+            res=res*res
+        else:
+            res*=n
+    return res
+```
+
+``` python
+assert pow(2,10)==2**10
+```
+
+## 2 CanSum
+
+### Vanilla version with recursion
+
+``` python
+def can_sum(target,nums):
+    if target==0: return True
+    if target<0: return False
+    for num in nums:
+        if can_sum(target-num, nums):
+            return True
+    return False
+```
+
+Given a target and list of numbers write a function which determines
+whether the target can be obtained by summing numbers from the list.
+
+``` python
+assert can_sum(7, (2,3))
+assert not can_sum(13, [2,4,6])
+```
+
+The trick is to return immediately as soon as target becomes 0. This
+return passes all the way to the top call and function returns `True`.
+However if after looping over all the numbers in the list, no solution
+is found, we return `False`.
+
+The time complexity of `can_sum` is $O(n^m)$ where `n` is the target and
+`m` is the length of `nums`. The following example highlights this.
+
+``` python
+# can_sum(250, [7,14])
+```
+
+### Recursion with memoization
