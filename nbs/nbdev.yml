@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "learn_algo"
+  site-url: "https://pankaj-kvhld.github.io/learn_algo"
+  description: "Notes on algorithms"
+  repo-branch: main
+  repo-url: "https://github.com/pankaj-kvhld/learn_algo"
