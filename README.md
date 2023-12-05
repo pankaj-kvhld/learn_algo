@@ -152,17 +152,66 @@ def how_sum(target, nums):
 ```
 
 ``` python
-how_sum(7, [2,3,5])
+how_sum(7, [3,4,2])
 ```
 
-    [3, 2, 2]
+    [4, 3]
+
+## Best sum
+
+Given a target number and a list of numbers find the shortest subset
+from the list which sums to the target. Assume all positive numbers.
+
+``` python
+def best_sum(target, nums):
+    if target==0: return []
+    if target<0: return None
+    sol=None
+    for num in nums:
+        res=best_sum(target-num, nums)
+        if isinstance(res,list):
+            res.append(num)
+            if sol is None or len(res)<len(sol):
+                sol=res
+    return sol
+```
+
+``` python
+print(best_sum(7, [1,2,]))
+print(best_sum(7, [1,2,3,]))
+print(best_sum(7, [1,2,4,]))
+print(best_sum(7, [1,2,6,]))
+print(best_sum(7, [1,2,6,7]))
+```
+
+    [2, 2, 2, 1]
+    [3, 3, 1]
+    [4, 2, 1]
+    [6, 1]
+    [7]
+
+## How many sum
+
+Given an target number and a list of numbers find how many subsets are
+there which sum to the target. Only positive numbers are present. A
+number can be used any number of times.
+
+``` python
+def all_sum(target, nums):
+    if target==0: return [[]]
+    if target<0: return []
+    sol=[]
+    for num in nums:
+        res=all_sum(target-num,nums)
+        if len(res)>=1 and len(sol)==0:
+            for l in res: l.append(num)
+            sol=res
+        if len(res)>=1 and len(sol)>=1:
+            sol += res
+    return sol
+```
 
 ## Can construct
-
-\<!– Write a function “canConstruct(target, wordBank) that accepts
-target string and an array of strings. The function should return a
-boolean indicating whether or not the”target\* can be constructed by
-concatenating elements of the wordBank array.
 
 Write a function `canConstruct(target, wordBank)` that accepts target
 string and an array of strings. The function should return a boolean
