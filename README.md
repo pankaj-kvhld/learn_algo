@@ -5,7 +5,7 @@
 This will serve as a quick revision and repo of all algorithms which I
 intend to master.
 
-## 1. Exponent
+## Exponent
 
 Write a program to implement $n^k$.
 
@@ -76,7 +76,7 @@ def pow(n,k):
 assert pow(2,10)==2**10
 ```
 
-## 2 CanSum
+## CanSum
 
 ### Vanilla version with recursion
 
@@ -112,7 +112,52 @@ The time complexity of `can_sum` is $O(n^m)$ where `n` is the target and
 
 ### Recursion with memoization
 
-## 3 Can construct
+``` python
+def can_sum(target, nums, memo={}):
+    if target in memo: return memo[target]
+    if target==0: return True
+    if target<0: return False
+    for num in nums:
+        if can_sum(target-num, nums, memo):
+            return True
+    memo[target]=False
+    return False
+```
+
+``` python
+can_sum(250, [7,14])
+```
+
+    False
+
+## How Sum
+
+Given a target number and a list of numbers, return the subset of
+numbers which sum to the target number. If more than one subsets
+possible, return any.
+
+If not possible to sum, return None.
+
+``` python
+def how_sum(target, nums):
+    if target==0: return []
+    if target<0: return None
+    res=None
+    for num in nums:
+        res=how_sum(target-num, nums)
+        if isinstance(res,list):
+            res.append(num)
+            return res
+    return res
+```
+
+``` python
+how_sum(7, [2,3,5])
+```
+
+    [3, 2, 2]
+
+## Can construct
 
 \<!– Write a function “canConstruct(target, wordBank) that accepts
 target string and an array of strings. The function should return a
@@ -175,7 +220,7 @@ def count_construct(target, words):
 count_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'])
 ```
 
-    3
+    1
 
 ``` python
 count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])
