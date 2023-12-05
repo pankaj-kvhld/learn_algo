@@ -5,7 +5,7 @@
 This will serve as a quick revision and repo of all algorithms which I
 intend to master.
 
-## Exponent
+## 1. Exponent
 
 Write a program to implement $n^k$.
 
@@ -76,7 +76,7 @@ def pow(n,k):
 assert pow(2,10)==2**10
 ```
 
-## CanSum
+## 2 CanSum
 
 ### Vanilla version with recursion
 
@@ -112,106 +112,12 @@ The time complexity of `can_sum` is $O(n^m)$ where `n` is the target and
 
 ### Recursion with memoization
 
-``` python
-def can_sum(target, nums, memo={}):
-    if target in memo: return memo[target]
-    if target==0: return True
-    if target<0: return False
-    for num in nums:
-        if can_sum(target-num, nums, memo):
-            return True
-    memo[target]=False
-    return False
-```
+## 3 Can construct
 
-``` python
-can_sum(250, [7,14])
-```
-
-    False
-
-## How Sum
-
-Given a target number and a list of numbers, return the subset of
-numbers which sum to the target number. If more than one subsets
-possible, return any.
-
-If not possible to sum, return None.
-
-``` python
-def how_sum(target, nums):
-    if target==0: return []
-    if target<0: return None
-    res=None
-    for num in nums:
-        res=how_sum(target-num, nums)
-        if isinstance(res,list):
-            res.append(num)
-            return res
-    return res
-```
-
-``` python
-how_sum(7, [3,4,2])
-```
-
-    [4, 3]
-
-## Best sum
-
-Given a target number and a list of numbers find the shortest subset
-from the list which sums to the target. Assume all positive numbers.
-
-``` python
-def best_sum(target, nums):
-    if target==0: return []
-    if target<0: return None
-    sol=None
-    for num in nums:
-        res=best_sum(target-num, nums)
-        if isinstance(res,list):
-            res.append(num)
-            if sol is None or len(res)<len(sol):
-                sol=res
-    return sol
-```
-
-``` python
-print(best_sum(7, [1,2,]))
-print(best_sum(7, [1,2,3,]))
-print(best_sum(7, [1,2,4,]))
-print(best_sum(7, [1,2,6,]))
-print(best_sum(7, [1,2,6,7]))
-```
-
-    [2, 2, 2, 1]
-    [3, 3, 1]
-    [4, 2, 1]
-    [6, 1]
-    [7]
-
-## How many sum
-
-Given an target number and a list of numbers find how many subsets are
-there which sum to the target. Only positive numbers are present. A
-number can be used any number of times.
-
-``` python
-def all_sum(target, nums):
-    if target==0: return [[]]
-    if target<0: return []
-    sol=[]
-    for num in nums:
-        res=all_sum(target-num,nums)
-        if len(res)>=1 and len(sol)==0:
-            for l in res: l.append(num)
-            sol=res
-        if len(res)>=1 and len(sol)>=1:
-            sol += res
-    return sol
-```
-
-## Can construct
+\<!– Write a function “canConstruct(target, wordBank) that accepts
+target string and an array of strings. The function should return a
+boolean indicating whether or not the”target\* can be constructed by
+concatenating elements of the wordBank array.
 
 Write a function `canConstruct(target, wordBank)` that accepts target
 string and an array of strings. The function should return a boolean
@@ -276,3 +182,30 @@ count_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])
 ```
 
     2
+
+## All construct
+
+Given a target string and list of substrings, return all the set of
+substrings which can be concatenated to create the target.
+
+Multiple usage of substrings is permitted.
+
+``` python
+def all_construct(target, subs):
+    if target=='': return [[]]
+    sol=[]
+    for sub in subs:
+        if target.startswith(sub):
+            res=all_construct(target[len(sub):], subs)
+            if len(res)>=1:
+                for l in res:
+                    l.append(sub)
+                sol+=res
+    return sol
+```
+
+``` python
+all_construct('abc',['a','bc', 'ab', 'c'])
+```
+
+    [['bc', 'a'], ['c', 'ab']]
