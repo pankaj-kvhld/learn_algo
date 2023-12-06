@@ -5,7 +5,7 @@
 This will serve as a quick revision and repo of all algorithms which I
 intend to master.
 
-## 1. Exponent
+## Exponent
 
 Write a program to implement $n^k$.
 
@@ -76,7 +76,7 @@ def pow(n,k):
 assert pow(2,10)==2**10
 ```
 
-## 2 CanSum
+## CanSum
 
 ### Vanilla version with recursion
 
@@ -112,7 +112,103 @@ The time complexity of `can_sum` is $O(n^m)$ where `n` is the target and
 
 ### Recursion with memoization
 
-## 3 Can construct
+``` python
+def can_sum(target,nums,memo={}):
+    if target in memo: return memo[target]
+    if target==0: return True
+    if target<0: return False
+    for num in nums: 
+        if can_sum(target-num,nums,memo):
+            memo[target]=True
+            return True
+    memo[target]=False
+    return False
+```
+
+Memoization makes the call to `can_sum(250, [7,14])` which previously
+took way too long super fast.
+
+``` python
+can_sum(250, [7,14])
+```
+
+    False
+
+## How sum
+
+Given a target and list of numbers return a subset which sums to the
+target. All numbers are positive and a give number from the list can be
+used multiple times.
+
+If the numbers cannot be summed to target, return None.
+
+``` python
+def how_sum_memo(target,nums,memo={}):
+    if target in memo: return memo[target]
+    if target==0: return []
+    if target<0: return None
+    for num in nums:
+        res=how_sum_memo(target-num, nums, memo)
+        if isinstance(res,list):
+            res.append(num)
+            memo[target]=res
+            return res
+    memo[target]=None
+    return None
+```
+
+``` python
+how_sum_memo(200, [7,14])
+```
+
+    CPU times: user 38 µs, sys: 7 µs, total: 45 µs
+    Wall time: 49.4 µs
+
+## All sums
+
+Given a target and a list of numbers, return a list of all subsets which
+sum to this target. Multiple usage of a number is permitted.
+
+``` python
+def all_sums(target,nums):
+    if target==0: return [[]]
+    if target<0: return []
+    sol=[]
+    for num in nums:
+        res=all_sums(target-num, nums)
+        if len(res)>=1:
+            for l in res:
+                l.append(num)
+            sol+=res
+    return sol
+```
+
+## Best sums
+
+Given a target and a list of numbers, return the subset that sums to
+target and has the least number of elements in it.
+
+``` python
+def best_sum(target,nums):
+    if target==0: return []
+    if target<0: return None
+    sol=None
+    for num in nums:
+        res=best_sum(target-num,nums)
+        if isinstance(res,list):
+            res.append(num)
+            if (sol is None) or (len(res) < len(sol)):
+                sol=res
+    return sol
+```
+
+``` python
+best_sum(7,[1,3,7])
+```
+
+    [7]
+
+## Can construct
 
 \<!– Write a function “canConstruct(target, wordBank) that accepts
 target string and an array of strings. The function should return a
