@@ -161,8 +161,8 @@ def how_sum_memo(target,nums,memo={}):
 how_sum_memo(200, [7,14])
 ```
 
-    CPU times: user 38 µs, sys: 7 µs, total: 45 µs
-    Wall time: 49.4 µs
+    CPU times: user 39 µs, sys: 4 µs, total: 43 µs
+    Wall time: 47.9 µs
 
 ## All sums
 
@@ -182,6 +182,12 @@ def all_sums(target,nums):
             sol+=res
     return sol
 ```
+
+``` python
+all_sums(5, [2,3])
+```
+
+    [[3, 2], [2, 3]]
 
 ## Best sums
 
@@ -209,11 +215,6 @@ best_sum(7,[1,3,7])
     [7]
 
 ## Can construct
-
-\<!– Write a function “canConstruct(target, wordBank) that accepts
-target string and an array of strings. The function should return a
-boolean indicating whether or not the”target\* can be constructed by
-concatenating elements of the wordBank array.
 
 Write a function `canConstruct(target, wordBank)` that accepts target
 string and an array of strings. The function should return a boolean
