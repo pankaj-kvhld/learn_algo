@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "blind_70.html",
+    "href": "blind_70.html",
+    "title": "Climb stairs",
+    "section": "",
+    "text": "You are climbing a staircase. It takes n steps to reach the top.\nEach time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?\nExample 1:\nInput: n = 2 Output: 2 Explanation: There are two ways to climb to the top. 1. 1 step + 1 step 2. 2 steps Example 2:\nInput: n = 3 Output: 3 Explanation: There are three ways to climb to the top. 1. 1 step + 1 step + 1 step 2. 1 step + 2 steps 3. 2 steps + 1 step\nConstraints:\n1 &lt;= n &lt;= 45\n\ndef num_ways(n):\n    if n==0: return 1\n    if n&lt;0: return 0\n    return sum(num_ways(n-i) for i in [1,2])\n\n\nnum_ways(4)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "learn_algo",
+    "section": "",
+    "text": "This will serve as a quick revision and repo of all algorithms which I intend to master."
+  },
+  {
+    "objectID": "index.html#exponent",
+    "href": "index.html#exponent",
+    "title": "learn_algo",
+    "section": "Exponent",
+    "text": "Exponent\nWrite a program to implement \\(n^k\\).\n\nIterative approach\nFirst is a simple iterative approach.\n\ndef pow(n,k):\n    res=1\n    for _ in range(k):\n        res*=n\n    return res\n\n\nassert pow(2,5)==32\n\n\n\nRecursive approach\nThe key is to realize that \\(n^k\\) can be expressed as sequence of squaring operations. For ex:\n\\[\\begin{equation}\nn^9=((n^2)^2)^2 \\times n\n\\end{equation}\\]\nWe divide the exponent (\\(k\\)) by \\(2\\), if we get an even number we divide by \\(2\\) again, if we get an odd number we multiply by the number and continue the process with \\(k-1\\).\n\ndef pow(n,k):\n    if k==1: return n\n    return pow(n,k//2) * pow(n, k//2) if k%2==0 else n * pow(n, k-1)\n\n\nassert pow(2,5)==2**5\nassert pow(3,5)==3**5\n\n\n\nRecursive implemented using a stack\nAny recursive function can be represented as an iterative one with a stack data structure. Which is what is happening in the recursive one.\n\ndef pow(n,k):\n    op_stack=[]\n    res=n\n    # Create the stack\n    while k&gt;1:\n        if k%2==0:\n            op_stack.append('square')\n            k=k//2\n        else:\n            op_stack.append('multiply')\n            k-=1\n    # Unravel the stack\n    while op_stack:\n        op=op_stack.pop()\n        if op=='square':\n            res=res*res\n        else:\n            res*=n\n    return res\n\n\nassert pow(2,10)==2**10"
+  },
+  {
+    "objectID": "index.html#cansum",
+    "href": "index.html#cansum",
+    "title": "learn_algo",
+    "section": "CanSum",
+    "text": "CanSum\n\nVanilla version with recursion\n\ndef can_sum(target,nums):\n    if target==0: return True\n    if target&lt;0: return False\n    for num in nums:\n        if can_sum(target-num, nums):\n            return True\n    return False\n\nGiven a target and list of numbers write a function which determines whether the target can be obtained by summing numbers from the list.\n\nassert can_sum(7, (2,3))\nassert not can_sum(13, [2,4,6])\n\nThe trick is to return immediately as soon as target becomes 0. This return passes all the way to the top call and function returns True. However if after looping over all the numbers in the list, no solution is found, we return False.\nThe time complexity of can_sum is \\(O(n^m)\\) where n is the target and m is the length of nums. The following example highlights this.\n\n# can_sum(250, [7,14])\n\n\n\nRecursion with memoization\n\ndef can_sum(target,nums,memo={}):\n    if target in memo: return memo[target]\n    if target==0: return True\n    if target&lt;0: return False\n    for num in nums: \n        if can_sum(target-num,nums,memo):\n            memo[target]=True\n            return True\n    memo[target]=False\n    return False\n\nMemoization makes the call to can_sum(250, [7,14]) which previously took way too long super fast.\n\ncan_sum(250, [7,14])\n\nFalse"
+  },
+  {
+    "objectID": "index.html#how-sum",
+    "href": "index.html#how-sum",
+    "title": "learn_algo",
+    "section": "How sum",
+    "text": "How sum\nGiven a target and list of numbers return a subset which sums to the target. All numbers are positive and a give number from the list can be used multiple times.\nIf the numbers cannot be summed to target, return None.\n\ndef how_sum_memo(target,nums,memo={}):\n    if target in memo: return memo[target]\n    if target==0: return []\n    if target&lt;0: return None\n    for num in nums:\n        res=how_sum_memo(target-num, nums, memo)\n        if isinstance(res,list):\n            res.append(num)\n            memo[target]=res\n            return res\n    memo[target]=None\n    return None\n\n\nhow_sum_memo(200, [7,14])\n\nCPU times: user 39 µs, sys: 4 µs, total: 43 µs\nWall time: 47.9 µs"
+  },
+  {
+    "objectID": "index.html#all-sums",
+    "href": "index.html#all-sums",
+    "title": "learn_algo",
+    "section": "All sums",
+    "text": "All sums\nGiven a target and a list of numbers, return a list of all subsets which sum to this target. Multiple usage of a number is permitted.\n\ndef all_sums(target,nums):\n    if target==0: return [[]]\n    if target&lt;0: return []\n    sol=[]\n    for num in nums:\n        res=all_sums(target-num, nums)\n        if len(res)&gt;=1:\n            for l in res:\n                l.append(num)\n            sol+=res\n    return sol\n\n\nall_sums(5, [2,3])\n\n[[3, 2], [2, 3]]"
+  },
+  {
+    "objectID": "index.html#best-sums",
+    "href": "index.html#best-sums",
+    "title": "learn_algo",
+    "section": "Best sums",
+    "text": "Best sums\nGiven a target and a list of numbers, return the subset that sums to target and has the least number of elements in it.\n\ndef best_sum(target,nums):\n    if target==0: return []\n    if target&lt;0: return None\n    sol=None\n    for num in nums:\n        res=best_sum(target-num,nums)\n        if isinstance(res,list):\n            res.append(num)\n            if (sol is None) or (len(res) &lt; len(sol)):\n                sol=res\n    return sol\n\n\nbest_sum(7,[1,3,7])\n\n[7]"
+  },
+  {
+    "objectID": "index.html#can-construct",
+    "href": "index.html#can-construct",
+    "title": "learn_algo",
+    "section": "Can construct",
+    "text": "Can construct\nWrite a function canConstruct(target, wordBank) that accepts target string and an array of strings. The function should return a boolean indicating whether or not the target can be constructed by concatenating elements of the wordBank array. You may reuse elements of wordBank as many times as needed.\n\ndef can_construct(target, words):\n    if target=='': return True\n    for word in words:\n        if target.startswith(word):\n            return can_construct(target[len(word):], words)\n    return False\n\n\ncan_construct('abcd', ['ab', 'bc', 'cd'])\n\nTrue\n\n\n\ncan_construct(\"\", [\"f\"])\n\nTrue\n\n\n\ncan_construct('ffffffffffffffffffffffd', ['f','fff','fffff', 'd'])\n\nTrue"
+  },
+  {
+    "objectID": "index.html#count-construct",
+    "href": "index.html#count-construct",
+    "title": "learn_algo",
+    "section": "Count construct",
+    "text": "Count construct\nWrite a function countConstruct(target, wordBank) that accepts a target string and an array of strings. The function should return the number of ways that the target can be constructed by concatenating elements of the wordBank array.\nYou may reuse elements of wordBank as many times as needed.\n\ndef count_construct(target, words):\n    if target=='': return 1\n    res=0\n    for word in words:\n        if target.startswith(word):\n            res += count_construct(target[len(word):], words)\n    return res\n\n\ncount_construct('abcdef', ['ab', 'abc', 'cd', 'def', 'abcd'])\n\n1\n\n\n\ncount_construct('purple', ['purp', 'p', 'ur', 'le', 'purpl'])\n\n2"
+  },
+  {
+    "objectID": "index.html#all-construct",
+    "href": "index.html#all-construct",
+    "title": "learn_algo",
+    "section": "All construct",
+    "text": "All construct\nGiven a target string and list of substrings, return all the set of substrings which can be concatenated to create the target.\nMultiple usage of substrings is permitted.\n\ndef all_construct(target, subs):\n    if target=='': return [[]]\n    sol=[]\n    for sub in subs:\n        if target.startswith(sub):\n            res=all_construct(target[len(sub):], subs)\n            if len(res)&gt;=1:\n                for l in res:\n                    l.append(sub)\n                sol+=res\n    return sol\n\n\nall_construct('abc',['a','bc', 'ab', 'c'])\n\n[['bc', 'a'], ['c', 'ab']]"
+  }
+]
